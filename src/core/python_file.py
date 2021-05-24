@@ -20,10 +20,14 @@ class PythonFile(File):
             raw_function_args = function.split('(')[1].split(')')[0].split(',')
             function_args = ExpandableDictionary()
             for arg in raw_function_args:
-                arg = arg.split(':')[0] + ' =' + arg.split('=')[1]
+                try:
+                    arg = arg.split(':')[0] + ' =' + arg.split('=')[1]
                 
-                arg_name = arg.split('=')[0].replace(' ', '')
-                arg_value = arg.split('=')[1][1:]
+                    arg_name = arg.split('=')[0].replace(' ', '')
+                    arg_value = arg.split('=')[1][1:]
+                except IndexError:
+                    arg_name = arg
+                    arg_value = 'None'
                 
                 function_args.add(arg_name, arg_value)
             
