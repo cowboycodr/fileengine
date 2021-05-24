@@ -1,0 +1,13 @@
+from file_ import File
+
+class PythonFile(File):
+    def __init__(self, filepath: str) -> None:
+        super().__init__(filepath)
+        
+        self.functions = self.extract_functions()
+
+    def extract_functions(self):
+        pass
+
+    def execute_file(self):
+        exec(self.changed_content)
