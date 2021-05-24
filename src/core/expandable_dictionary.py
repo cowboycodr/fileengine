@@ -11,3 +11,6 @@ class ExpandableDictionary(dict):
         
     def remove(self, key: any) -> None:
         del self[key]
+        
+    def clear(self) -> None:
+        self.__init__()
