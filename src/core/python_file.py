@@ -6,6 +6,7 @@ class PythonFile(File):
         super().__init__(filepath)
         
         self.functions = self.extract_functions()
+        self.variables = self.extract_variables()
     
     def extract_functions(self) -> dict:
         raw_functions = self.raw_content.split('DEF'.lower())[1:]
@@ -16,6 +17,11 @@ class PythonFile(File):
         for function in raw_functions:
             function_name = function.split('(')[0].replace(' ', '')
             function_code = function.split('\n')[1:]
+            function_code_dict = ExpandableDictionary()
+            function_variables = self.extract_variables(function_code)
+
+            for function_line in range(len(function_code)):
+                function_code_dict.add(function_line, function_code[function_line])
             
             raw_function_args = function.split('(')[1].split(')')[0].split(',')
             function_args = ExpandableDictionary()
@@ -34,10 +40,34 @@ class PythonFile(File):
             function_details.add('name', function_name)
             function_details.add('args', function_args)
             function_details.add('content', function_code)
-            
+            function_details.add('content-dict', function_code_dict)
+            function_details.add('varirables', function_variables)
+
             functions.add(function_name, function_details)
             
+            function_details = ExpandableDictionary()
+            function_args = ExpandableDictionary()
+
         return functions
+
+    def extract_variables(self, content_lines: list = None) -> dict:
+        raw_variables = ExpandableDictionary()
+
+        if not content_lines:
+            content_lines = self.content_lines
+
+        for line in content_lines:
+            if line.count('=') == 1 and line.count('DEF'.lower()) == 0:
+                variable_name = line.split('=')[0].replace(' ', '')
+
+                variable_value = line.split('=')[1]
+
+                if variable_value[0] == ' ':
+                    variable_value = variable_value[1:]
+
+                raw_variables.add(variable_name, variable_value)
+
+        return raw_variables
 
     def execute_function(self, function_template, *args): #use: pr.execute_function('do_nothing(nothing, this)), 'nothing', 'this')
         function_reference = self.functions[function_template.split('(')[0].replace(' ', '')]
@@ -54,6 +84,6 @@ class PythonFile(File):
             return False
      
 if __name__ == '__main__':
-    pf = PythonFile(r'src\core\python_types\function_extraction_test.py')
+    pf = PythonFile(r'/Users/3089401/code/python-development/file-engine/file-engine/src/core/python_types/function_extraction_test.py')
     
-    pf.execute_function('do_nothing()')
+    print(pf.functions)
