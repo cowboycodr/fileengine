@@ -82,8 +82,3 @@ class PythonFile(File):
             return True
         except:
             return False
-     
-if __name__ == '__main__':
-    pf = PythonFile(r'/Users/3089401/code/python-development/file-engine/file-engine/src/core/python_types/function_extraction_test.py')
-    
-    print(pf.functions)
