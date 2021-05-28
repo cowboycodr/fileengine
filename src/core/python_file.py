@@ -1,5 +1,6 @@
-from file_ import File
-from expandable_dictionary import ExpandableDictionary
+from src.core.file_ import File
+from src.core.utils.expandable_dictionary import ExpandableDictionary
+from src.core.types.variable import Variable
 
 class PythonFile(File):
     def __init__(self, filepath: str) -> None:
@@ -65,7 +66,9 @@ class PythonFile(File):
                 if variable_value[0] == ' ':
                     variable_value = variable_value[1:]
 
-                raw_variables.add(variable_name, variable_value)
+                variable = Variable(name=variable_name, value=variable_value)                
+
+                raw_variables.add_variable(variable)
 
         return raw_variables
 

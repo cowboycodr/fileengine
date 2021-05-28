@@ -1,4 +1,7 @@
-from expandable_dictionary import ExpandableDictionary
+from src.core.utils.expandable_dictionary import ExpandableDictionary
+import webbrowser
+import pathlib
+import os
 
 class File:
     '''
@@ -7,7 +10,8 @@ class File:
     '''
     
     def __init__(self, filepath: str) -> None:
-        self.filepath = filepath
+        self.filepath = os.path.abspath(filepath)
+        self.filepath_url = pathlib.Path(self.filepath).as_uri()
         
         self.ORIGINAL_CONTENT = self.read_raw_content()
         
@@ -22,7 +26,14 @@ class File:
         return f'{self.__class__.__name__}(filepath="{self.filepath}")'
     
     def __str__(self):
-        return self.changed_content
+        str_output = []
+        
+        changed_content_list = self.changed_content.split('\n')
+        
+        for changed_line in range(0, len(changed_content_list)):
+            str_output.append(f'{changed_line + 1}. ' + changed_content_list[changed_line] + '\n')
+            
+        return ''.join(str_output)
 
     def read_raw_content(self) -> str:
         with open(self.filepath, 'r') as f:

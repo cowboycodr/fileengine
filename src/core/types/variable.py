@@ -50,4 +50,9 @@ class Variable:
         self.dictionary = values
         
         return values
+
+    def get_name(self) -> str:
+        return self.__name
+  
+        return values
             
